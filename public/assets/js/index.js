@@ -55,7 +55,7 @@ var handleNoteSave = function() {
     title: $noteTitle.val(),
     text: $noteText.val()
   };
-
+// alert(newNote.title +':'+newNote.text)
   saveNote(newNote).then(function(data) {
     getAndRenderNotes();
     renderActiveNote();

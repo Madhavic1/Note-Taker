@@ -1,0 +1,19 @@
+app.get('/api/notes', (req, res) => {
+    //reading bd.json file
+    var newNote = [
+        {
+            "title": "Madhavi Mullapudi",
+            "text": "Seattle,Washington"
+        }
+    ];
+
+    var data = fs.readFileSync(path.join(__dirname, './db/db.json'));
+    var jsonData = JSON.parse(data);
+    // fs.writeFileSync(path.join(__dirname,'db'))
+    jsonData.push(...newNote);
+    
+    let data1 = JSON.stringify(newNote);
+    fs.writeFileSync(path.join(__dirname, './db/db.json'),JSON.stringify(data1));
+    //return json data as response to the request
+    return res.json(jsonData);
+});
