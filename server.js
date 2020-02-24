@@ -36,11 +36,12 @@ app.get('/api/notes', (req, res) => {
 app.post('/api/notes',(req,res)=>{
     //new note
     var note = req.body;
+    //newCharacter.routeName = newCharacter.name.replace(/\s+/g, "").toLowerCase();
+    note.id = note.title.replace(/\s+/g,"").toLowerCase();
     console.log(note);
 
     //reading db.json file
-    var data = fs.readFileSync(path.join(__dirname, './db/db.json'));
-    var jsonData = JSON.parse(data);
+    var jsonData = readDbjsonFile();
     jsonData.push(note);
     console.log(jsonData);
     console.log('appending data ');
@@ -55,10 +56,29 @@ app.post('/api/notes',(req,res)=>{
     return res.json(note);
 });
 
-app.delete('/api/notes/:id',(req,res)=>{
+app.delete('/api/notes/:id', (req, res) => {
+
+    var deleteID = req.params.id;
+    var jsonData = readDbjsonFile();
+    for (let i = 0; i < jsonData.length; i++) {
+        if (deleteID === jsonData[i].id) {
+            //delete this note
+            jsonData.splice(i, 1);
+        }
+    }
+    console.log('---');
+    console.log(jsonData);
+    fs.writeFileSync(path.join(__dirname, './db/db.json'),JSON.stringify(jsonData));
+
     res.send('Deleting data from db.json')
 });
 
 app.listen(PORT,()=>{
     console.log(`Server is listening to the port ${PORT}`);
 });
+function readDbjsonFile() {
+    var data = fs.readFileSync(path.join(__dirname, './db/db.json'));
+    var jsonData = JSON.parse(data);
+    return jsonData;
+}
+
